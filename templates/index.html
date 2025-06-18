@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignPop Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Ensure game area has correct background color */
+        .game-area, .game-feed, .score-panel, .camera-panel {
+            background-color: #0d0033;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">SignPop</h1>
+        
+        <div class="game-layout">
+            <!-- Left side - Game Area -->
+            <div class="game-area">
+                <img src="{{ url_for('video_feed') }}" alt="SignPop Game" class="game-feed">
+            </div>
+            
+            <!-- Right side panels -->
+            <div class="right-panels">
+                <!-- Score panel -->
+                <div class="score-panel">
+                    <div class="score" id="score-display">0</div>
+                    <div class="hearts">
+                        <span class="heart">♥</span>
+                        <span class="heart">♥</span>
+                        <span class="heart">♥</span>
+                    </div>
+                </div>
+                
+                <!-- Camera panel -->
+                <div class="camera-panel">
+                    <img src="{{ url_for('camera_feed') }}" alt="Camera Feed" class="camera-feed">
+                </div>
+            </div>
+        </div>
+        
+        <!-- Game control buttons -->
+        <div class="game-controls">
+            <button id="start-button">START GAME</button>
+            <button id="end-button" disabled>END GAME</button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Game Over</h5>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="modal-body">
+                <h2>Your Score: <span id="final-score">0</span></h2>
+                <p>Can you beat it next time?</p>
+            </div>
+            <div class="modal-footer">
+                <button id="play-again-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
