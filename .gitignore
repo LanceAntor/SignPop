@@ -28,13 +28,6 @@ build/
 *.swo
 .DS_Store
 
-# Large model files
-*.h5
-*.pkl
-*.model
-*.pyd
-*.dll
-
 # Logs and databases
 *.log
 *.sqlite
