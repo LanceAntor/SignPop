@@ -5,63 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SignPop Game</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <style>
-        /* Ensure game area has correct background color */
-        .game-area, .game-feed, .score-panel, .camera-panel {
-            background-color: #0d0033;
-        }
-    </style>
+    <!-- Add Font Awesome to your head section -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="title">SignPop</h1>
-        
-        <div class="game-layout">
-            <!-- Left side - Game Area -->
-            <div class="game-area">
-                <img src="{{ url_for('video_feed') }}" alt="SignPop Game" class="game-feed">
-            </div>
-            
-            <!-- Right side panels -->
-            <div class="right-panels">
-                <!-- Score panel -->
-                <div class="score-panel">
-                    <div class="score" id="score-display">0</div>
-                    <div class="hearts">
-                        <span class="heart">♥</span>
-                        <span class="heart">♥</span>
-                        <span class="heart">♥</span>
-                    </div>
-                </div>
-                
-                <!-- Camera panel -->
-                <div class="camera-panel">
-                    <img src="{{ url_for('camera_feed') }}" alt="Camera Feed" class="camera-feed">
-                </div>
-            </div>
-        </div>
-        
-        <!-- Game control buttons -->
-        <div class="game-controls">
-            <button id="start-button">START GAME</button>
-            <button id="end-button" disabled>END GAME</button>
-        </div>
-    </div>
+    <h1>SignPop</h1>
 
-    <!-- Game Over Modal -->
-    <div class="modal" id="gameOverModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Game Over</h5>
-                <span class="close-button">&times;</span>
+    <div class="grid-container">
+        <!-- Game area (1) -->
+        <div class="game-area">
+            <img src="{{ url_for('video_feed') }}" alt="SignPop Game" class="game-feed">
+        </div>
+
+        <!-- Score area (2) -->
+        <div class="score-area">
+            <div class="score" id="score-display">0</div>
+            <div class="lives">
+                <div class="heart"><i class="fas fa-heart"></i></div>
+                <div class="heart"><i class="fas fa-heart"></i></div>
+                <div class="heart"><i class="fas fa-heart"></i></div>
             </div>
-            <div class="modal-body">
-                <h2>Your Score: <span id="final-score">0</span></h2>
-                <p>Can you beat it next time?</p>
-            </div>
-            <div class="modal-footer">
-                <button id="play-again-btn">Play Again</button>
-            </div>
+        </div>
+
+        <!-- Camera area (3) -->
+        <div class="camera-area">
+            <img src="{{ url_for('camera_feed') }}" alt="Camera Feed" class="camera-feed">
+        </div>
+
+        <!-- Instructions area (4) -->
+        <div class="instructions">
+            <h2>How To play</h2>
+            <ol>
+                <li>Make sure your webcam or phone camera is on and your hands are fully visible in the frame. Proper lighting helps SignPop read your signs clearly.</li>
+                <li>Letters (like A, B, C...) will drop from the top of the screen. Focus on one at a time—they're your popping targets!</li>
+                <li>Quick! Use your hand to make the correct sign language gesture that matches the falling letter. Hold it up to the camera clearly.</li>
+                <li>Match it right before it hits the bottom, and you'll see a colorful pop animation + score points.</li>
+                <li>Too slow or the wrong sign? The letter escapes, and you lose a life!</li>
+                <li>The more signs you get right, the faster and more challenging the letters fall. Earn titles like:</li>
+            </ol>
+        </div>
+
+        <!-- Buttons area (5) -->
+        <div class="buttons">
+            <button id="start-button" class="btn-play">Play</button>
+            <button id="end-button" class="btn-stop" disabled>Stop</button>
         </div>
     </div>
 
