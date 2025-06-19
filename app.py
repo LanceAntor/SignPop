@@ -35,6 +35,12 @@ class FallingLetter:
 def init_camera():
     global camera
     try:
+        # If camera exists but isn't open, release it first
+        if camera is not None and not camera.isOpened():
+            camera.release()
+            camera = None
+            
+        # Initialize a new camera if needed
         if camera is None:
             camera = cv2.VideoCapture(0)
             camera.set(3, 640)
@@ -51,9 +57,11 @@ def init_camera():
     return camera
 
 def generate_frames():
-    global score, lives, game_active, game_started, falling_letters, last_prediction
+    global score, lives, game_active, game_started, falling_letters, last_prediction, camera
     
-    camera = init_camera()
+    # Only initialize camera if game is active
+    if game_active and game_started:
+        camera = init_camera()
     
     # No initial letters - start with empty list
     with lock:
@@ -63,6 +71,10 @@ def generate_frames():
     letter_interval = 3.0  # Time between new letters
     
     while True:
+        # Reinitialize camera if game is active but camera is None or closed
+        if game_active and game_started and (camera is None or not camera.isOpened()):
+            camera = init_camera()
+            
         # Create canvas with EXACT dark blue background matching CSS
         canvas = np.zeros((480, 640, 3), dtype=np.uint8)
         canvas[:, :] = DARK_BLUE
@@ -151,9 +163,13 @@ def video_feed():
 def camera_feed():
     """Provide raw camera feed for the camera panel"""
     def generate_camera():
-        camera = init_camera()
+        global camera
         
         while True:
+            # Reinitialize camera if game is active but camera is None or closed
+            if game_started and (camera is None or not camera.isOpened()):
+                camera = init_camera()
+                
             # Only show camera if game has started
             if game_started:
                 if camera is not None and camera.isOpened():
@@ -162,7 +178,7 @@ def camera_feed():
                     if not success:
                         # Create a blank frame with message if camera fails
                         frame = np.zeros((150, 200, 3), dtype=np.uint8)
-                        frame[:, :] = DARK_BLUE
+                        # frame[:, :] = DARK_BLUE
                         cv2.putText(frame, "No camera", (50, 75), 
                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
                     else:
@@ -197,7 +213,11 @@ def camera_feed():
 
 @app.route('/start_game')
 def start_game():
-    global game_active, game_started, score, lives, falling_letters, last_prediction
+    global game_active, game_started, score, lives, falling_letters, last_prediction, camera
+    
+    # Make sure to initialize the camera
+    camera = init_camera()
+    
     game_active = True
     game_started = True
     score = 0
@@ -210,10 +230,23 @@ def start_game():
         
     return jsonify({'status': 'success'})
 
+# Add this function to release the camera
+def release_camera():
+    global camera
+    if camera is not None and camera.isOpened():
+        camera.release()
+        camera = None
+        print("Camera released")
+
 @app.route('/end_game')
 def end_game():
-    global game_active
+    global game_active, game_started, camera
     game_active = False
+    game_started = False  # Also set game_started to False
+    
+    # Release the camera
+    release_camera()
+    
     return jsonify({
         'status': 'success',
         'score': score

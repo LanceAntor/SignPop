@@ -87,7 +87,7 @@ body {
 
 .heart {
     color: #ffc400;
-    font-size: 36px;
+    font-size: 62px;
     margin: 0 5px;
 }
 
@@ -199,6 +199,9 @@ body {
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
+}
+img.game-feed{
+    height: 100%;
 }
 
 @media (max-width: 900px) {
