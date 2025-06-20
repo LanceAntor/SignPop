@@ -106,3 +106,55 @@ h1 {
     height: auto;
     filter: invert(37%) sepia(93%) saturate(7466%) hue-rotate(251deg) brightness(101%) contrast(94%);
 }
+
+.camera-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 100;
+    background-color: rgba(153, 69, 199, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.camera-toggle:hover {
+    background-color: rgba(153, 69, 199, 1);
+}
+
+.camera-toggle.off {
+    background-color: rgba(255, 69, 69, 0.7);
+}
+
+.camera-toggle.off:hover {
+    background-color: rgba(255, 69, 69, 1);
+}
+
+.camera-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #0a0642;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+}
+
+.camera-placeholder i {
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: rgba(153, 69, 199, 0.7);
+}

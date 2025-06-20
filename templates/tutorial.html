@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Language Tutorial</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tutorial.css') }}">
+    <!-- Add Font Awesome for camera icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body>
     <h1>Tutorial</h1>
@@ -44,9 +46,21 @@
         </div> 
         
         <div class="camera-display">
-            <!-- <video id="webcam" autoplay playsinline></video> -->
-            <div class="camera-icon">
-                <img src="{{ url_for('static', filename='images/camera-icon.png') }}" alt="Camera icon">
+            <!-- Add camera toggle button -->
+            <button id="cameraToggle" class="camera-toggle">
+                <i class="fas fa-video"></i>
+            </button>
+            
+            <img id="cameraFeed" src="{{ url_for('video_feed_tutorial') }}" alt="Camera Feed with Hand Detection">
+            
+            <!-- Add a placeholder for when camera is off -->
+            <div id="cameraPlaceholder" class="camera-placeholder" style="display: none;">
+                <i class="fas fa-video-slash"></i>
+                <p>Camera is off</p>
+            </div>
+            
+            <div class="detection-overlay">
+                <p id="detectedLetter">Ready to detect</p>
             </div>
         </div>
     </div>

@@ -21,6 +21,10 @@ camera = None
 lock = threading.Lock()  # For thread safety
 last_prediction = {"label": None, "confidence": 0}
 
+# Tutorial mode variables
+last_detected_letter = None
+tutorial_mode_active = False
+
 # Define the exact dark blue color to match CSS
 DARK_BLUE = (51, 0, 13)  # BGR format for OpenCV (equivalent to #0d0033)
 
@@ -277,6 +281,93 @@ def get_status():
         'lives': lives,
         'letters_count': len(falling_letters)
     })
+
+# Add these global variables and routes for the tutorial page
+@app.route('/video_feed_tutorial')
+def video_feed_tutorial():
+    """Provide video feed with hand detection for tutorial page"""
+    return Response(generate_tutorial_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/detected_letter')
+def detected_letter():
+    """Return the last detected letter for polling"""
+    global last_detected_letter
+    return jsonify({"letter": last_detected_letter})
+
+@app.route('/activate_tutorial')
+def activate_tutorial():
+    """Activate tutorial mode and initialize camera"""
+    global tutorial_mode_active, camera
+    tutorial_mode_active = True
+    
+    # Initialize camera if needed
+    if camera is None or not camera.isOpened():
+        camera = init_camera()
+    
+    return jsonify({"status": "success"})
+
+@app.route('/deactivate_tutorial')
+def deactivate_tutorial():
+    """Deactivate tutorial mode when camera is turned off"""
+    global tutorial_mode_active
+    tutorial_mode_active = False
+    return jsonify({"status": "success"})
+
+def generate_tutorial_frames():
+    """Generate frames with hand detection for tutorial page"""
+    global camera, last_detected_letter, tutorial_mode_active
+    
+    # Ensure camera is initialized
+    if camera is None or not camera.isOpened():
+        camera = init_camera()
+    
+    # Parameters for hand detection
+    offset = 20
+    imageSize = 300
+    
+    while True:
+        # Create a default frame in case camera fails
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        frame[:, :] = DARK_BLUE
+        
+        # Only process if camera is available
+        if camera is not None and camera.isOpened():
+            success, frame = camera.read()
+            
+            if success:
+                # Flip frame horizontally for mirror effect
+                frame = cv2.flip(frame, 1)
+                
+                # Process hand detection
+                predicted_label, confidence, processed_frame, _ = detector.detect_hand_sign(frame.copy())
+                
+                # Use the processed frame if available
+                if processed_frame is not None:
+                    frame = processed_frame
+                
+                # Update last detected letter if confidence is high enough
+                if confidence > 75:
+                    last_detected_letter = predicted_label
+                    
+                    # Add text overlay showing detected letter
+                    cv2.putText(frame, f"Detected: {predicted_label} ({confidence:.1f}%)", 
+                               (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            else:
+                # Display message if camera read fails
+                cv2.putText(frame, "Camera error", (220, 240), 
+                           cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        else:
+            # Display message if no camera
+            cv2.putText(frame, "No camera available", (180, 240), 
+                       cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+                       
+        # Convert the frame to JPEG
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame_bytes = buffer.tobytes()
+        
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
 
 if __name__ == '__main__':
     app.run(debug=True)

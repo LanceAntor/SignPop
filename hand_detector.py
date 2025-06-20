@@ -84,7 +84,7 @@ class HandSignDetector:
             conf_text = f"{confidence:.1f}%"
             conf_width = cv2.getTextSize(conf_text, cv2.FONT_HERSHEY_SIMPLEX, 0.75, 1)[0][0]
             cv2.putText(imgOutput, conf_text, (x + 30, y - 26 + 45), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.75, (255, 255, 255), 1)
+                       cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 1)
             
             return predicted_label, confidence, imgOutput, imgWhite
             
