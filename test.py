@@ -61,8 +61,8 @@ while True:
         
 
 
-        cv2.imshow("Cropped Image", imgCrop)
-        cv2.imshow("White Image", imgWhite)
+        # cv2.imshow("Cropped Image", imgCrop)
+        # cv2.imshow("White Image", imgWhite)
 
 
     cv2.imshow("Image", imgOutput)
