@@ -238,18 +238,26 @@ def release_camera():
         camera = None
         print("Camera released")
 
+# Update the end_game function in your Flask app
 @app.route('/end_game')
 def end_game():
-    global game_active, game_started, camera
+    global game_active, game_started, camera, score, falling_letters
     game_active = False
-    game_started = False  # Also set game_started to False
+    game_started = False
+    
+    # Save the current score before releasing the camera
+    final_score = score
+    
+    # Clear all falling letters
+    with lock:
+        falling_letters = []
     
     # Release the camera
     release_camera()
     
     return jsonify({
         'status': 'success',
-        'score': score
+        'score': final_score
     })
 
 @app.route('/get_status')

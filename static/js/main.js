@@ -26,7 +26,25 @@ $(document).ready(function() {
 
     // Stop game when clicking the stop button
     $('#end-button').click(function() {
-        endGame();
+        endGame(true); // true indicates manual stop
+    });
+
+    // Play Again button in modal
+    $('#playAgainBtn').click(function() {
+        $('#gameOverModal').hide();
+        startGame();
+    });
+
+    // Close modal button
+    $('.close-modal').click(function() {
+        $('#gameOverModal').hide();
+    });
+
+    // Also close modal if user clicks outside of it
+    $(window).click(function(event) {
+        if ($(event.target).is('#gameOverModal')) {
+            $('#gameOverModal').hide();
+        }
     });
 
     // Start game function
@@ -36,7 +54,7 @@ $(document).ready(function() {
             url: '/start_game',
             success: function(response) {
                 if (response.status === 'success') {
-                    // Update UI
+                    // Update UI - disable play button, enable stop button
                     $('#start-button').prop('disabled', true);
                     $('#end-button').prop('disabled', false);
                     gameRunning = true;
@@ -49,13 +67,13 @@ $(document).ready(function() {
     }
 
     // End game function
-    function endGame() {
+    function endGame(isManual = false) {
         // Call the end_game endpoint
         $.ajax({
             url: '/end_game',
             success: function(response) {
                 if (response.status === 'success') {
-                    // Update UI
+                    // Update UI - enable play button, disable stop button
                     $('#start-button').prop('disabled', false);
                     $('#end-button').prop('disabled', true);
                     gameRunning = false;
@@ -63,19 +81,17 @@ $(document).ready(function() {
                     // Stop checking game status
                     clearInterval(statusCheckInterval);
                     
-                    // Reset hearts to 3 with yellow color
-                    updateHearts(3);
+                    // Show game over modal if game ended by losing (not manual stop)
+                    if (!isManual) {
+                        // Update final score in modal
+                        $('#finalScore').text(response.score);
+                        
+                        // Show modal
+                        $('#gameOverModal').show();
+                    }
                 }
             }
         });
-    }
-
-    // Function to update hearts with explicit yellow color
-    function updateHearts(count) {
-        $('.lives').empty();
-        for (let i = 0; i < count; i++) {
-            $('.lives').append('<div class="heart"><i class="fas fa-heart"></i></div>');
-        }
     }
 
     // Check game status
@@ -88,15 +104,23 @@ $(document).ready(function() {
                 // Update score
                 $('#score-display').text(status.score);
                 
-                // Update hearts with our custom function that forces yellow
+                // Update hearts
                 updateHearts(status.lives);
                 
-                // Check if game ended
+                // Check if game ended automatically (e.g., player lost all lives)
                 if (!status.game_active && gameRunning) {
-                    endGame();
+                    endGame(false); // false indicates automatic game end (loss)
                 }
             }
         });
+    }
+
+    // Function to update hearts
+    function updateHearts(count) {
+        $('.lives').empty();
+        for (let i = 0; i < count; i++) {
+            $('.lives').append('<div class="heart"><i class="fas fa-heart" style="color: #FFD700;"></i></div>');
+        }
     }
     
     // Initialize with yellow hearts

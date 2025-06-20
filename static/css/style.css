@@ -1,4 +1,3 @@
-Alphabet\static\css\style.css
 * {
   margin: 0;
   padding: 0;
@@ -12,6 +11,7 @@ body {
 }
 
 h1 {
+  font-family: 'Kumar One', cursive;
   text-align: center;
   font-size: 4rem;
   margin-bottom: 20px;
@@ -25,8 +25,9 @@ h1 {
   grid-template-rows: repeat(5, 1fr);
   gap: 16px;
   height: 80vh;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
+  margin-bottom: 30px;
 }
 
 .game-area {
@@ -57,6 +58,10 @@ h1 {
   align-items: center;
   background-color: #0a0642;
 }
+.score-area hr{
+  width: 40%;
+  border: 2px solid #FFD700;
+}
 
 #score-display, .score {
   font-size: 72px;
@@ -67,7 +72,7 @@ h1 {
 .lives {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 15px;
   margin-top: 20px;
 }
 
@@ -112,20 +117,29 @@ h1 {
   padding: 15px;
   background-color: #0a0642;
 }
+.instructions hr{
+  width: 80%;
+  border: 2px solid white;
+  margin-left: 25px
+}
 
 .instructions h2 {
+  font-family: 'Kumar One', cursive;
   text-align: center;
   margin-top: 0;
+  font-size: 22px;
   color: white;
 }
 
 .instructions ol {
+  margin-top: 25px;
   padding-left: 20px;
 }
 
 .instructions li {
-  margin-bottom: 10px;
-  font-size: 14px;
+  margin-bottom: 15px;
+  font-size: 13px;
+  font-family: 'Lohit Devanagari', sans-serif;
 }
 
 .buttons {
@@ -136,7 +150,7 @@ h1 {
   align-items: center;
   gap: 15px;
   width: 100%;
-  margin-left: 30px;
+  margin-left: 10px;
 }
 
 .btn-play, .btn-stop, #start-button, #end-button {
@@ -164,6 +178,105 @@ h1 {
 .heart i {
   color: #FFD700;
   font-size: 2rem;
+}
+
+/* Style for disabled buttons */
+.btn-play:disabled, .btn-stop:disabled, #start-button:disabled, #end-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal styling */
+.modal {
+    display: none; /* Start with none, will be changed to block when shown */
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.modal-content {
+    position: relative;
+    background-color: #0a0642;
+    border: 3px solid #7a36b1;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 550px;
+    margin: 10% auto;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.modal-title {
+    color: #FFD700;
+    font-family: 'Kumar One', cursive;
+    font-size: 40px;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.modal-score-text {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.final-score {
+    font-size: 100px;
+    font-weight: bold;
+    color: #FFD700;
+    margin: 15px 0;
+    font-family: 'Kumar One', cursive;
+}
+
+.score-message {
+    color: white;
+    font-size: 20px;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.play-again-btn {
+    background-color: transparent;
+    color: white;
+    border: 5px solid #7a36b1;
+    border-radius: 50px;
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 180px;
+    height: 70px;
+    transition: background-color 0.2s;
+}
+
+.play-again-btn:hover {
+    background-color: #d89af9;
+}
+
+/* Modal animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 /* Responsive adjustments */

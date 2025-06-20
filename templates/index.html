@@ -7,10 +7,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- Add Font Awesome to your head section -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kumar+One&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lohit+Devanagari&display=swap">
 </head>
 <body>
     <h1>SignPop</h1>
-
+    
     <div class="grid-container">
         <!-- Game area (1) -->
         <div class="game-area">
@@ -20,6 +22,7 @@
         <!-- Score area (2) -->
         <div class="score-area">
             <div class="score" id="score-display">0</div>
+            <hr>
             <div class="lives">
                 <div class="heart"><i class="fas fa-heart"></i></div>
                 <div class="heart"><i class="fas fa-heart"></i></div>
@@ -35,13 +38,13 @@
         <!-- Instructions area (4) -->
         <div class="instructions">
             <h2>How To play</h2>
+            <hr>
             <ol>
-                <li>Make sure your webcam or phone camera is on and your hands are fully visible in the frame. Proper lighting helps SignPop read your signs clearly.</li>
-                <li>Letters (like A, B, C...) will drop from the top of the screen. Focus on one at a time—they're your popping targets!</li>
-                <li>Quick! Use your hand to make the correct sign language gesture that matches the falling letter. Hold it up to the camera clearly.</li>
-                <li>Match it right before it hits the bottom, and you'll see a colorful pop animation + score points.</li>
-                <li>Too slow or the wrong sign? The letter escapes, and you lose a life!</li>
-                <li>The more signs you get right, the faster and more challenging the letters fall. Earn titles like:</li>
+                <li>Position your hands clearly in the camera view with good lighting.</li>
+                <li>Make the correct sign language gesture for each falling letter.</li>
+                <li>Pop letters before they hit bottom to score points.</li>
+                <li>Miss a letter or make the wrong sign? You lose a life!</li>
+                <li>Speed increases as your score goes up. Good luck!</li>
             </ol>
         </div>
 
@@ -49,6 +52,17 @@
         <div class="buttons">
             <button id="start-button" class="btn-play">Play</button>
             <button id="end-button" class="btn-stop" disabled>Stop</button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameOverModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Game Over!</h2>
+            <p class="modal-score-text">Your final score:</p>
+            <div class="final-score" id="finalScore">0</div>
+            <button id="playAgainBtn" class="play-again-btn">Play Again</button>
         </div>
     </div>
 
