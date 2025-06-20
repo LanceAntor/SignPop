@@ -152,6 +152,10 @@ def generate_frames():
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
 
 @app.route('/')
+def root():
+    return render_template('signpop_home.html')
+
+@app.route('/index')
 def index():
     return render_template('index.html')
 

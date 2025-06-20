@@ -1,0 +1,73 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0d0033; /* Dark blue background */
+    font-family: Arial, Helvetica, sans-serif;
+    height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.title {
+    color: #ffd700; /* Golden yellow */
+    font-size: 65px;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-family: 'Kumar One', cursive;
+}
+
+
+.container hr{
+    margin-top: -10px;
+    width: 500px;
+    border: 3px solid  #ffd700;
+    margin-bottom: 50px;
+}
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    border: 2px solid #9932cc; /* Purple */
+    border-radius: 2rem;
+    text-decoration: none;
+    font-size: 2rem;
+    font-weight: bold;
+    transition: all 0.3s;
+    font-family: 'Kumar One', cursive; 
+}
+
+.start-button {
+    color: #ffd700; /* Golden yellow text */
+    background-color: transparent;
+    height: 120px;
+    width: 350px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+}
+
+.tutorial-button {
+    margin-top: 30px;
+    color: #ffd700; /* Golden yellow text */
+    background-color: transparent;
+    height: 50px;
+    width: 250px;
+}
+
+.button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(153, 50, 204, 0.6);
+}
