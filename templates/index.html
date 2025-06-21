@@ -66,6 +66,10 @@
         </div>
     </div>
 
+    <!-- Audio elements for sound effects -->
+    <audio id="popSound" src="{{ url_for('static', filename='sounds/pop.mp3') }}" preload="auto"></audio>
+    <audio id="gameOverSound" src="{{ url_for('static', filename='sounds/game_over.mp3') }}" preload="auto"></audio>
+
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

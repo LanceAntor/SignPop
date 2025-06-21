@@ -313,6 +313,33 @@ def deactivate_tutorial():
     tutorial_mode_active = False
     return jsonify({"status": "success"})
 
+@app.route('/stop_camera')
+def stop_camera():
+    """Stop the camera when toggled off"""
+    global camera, tutorial_mode_active
+    
+    # Release camera if it's active
+    with lock:
+        if camera is not None and camera.isOpened():
+            camera.release()
+            camera = None
+    
+    tutorial_mode_active = False
+    return jsonify({"status": "success"})
+
+@app.route('/start_camera')
+def start_camera():
+    """Start the camera when toggled on"""
+    global camera, tutorial_mode_active
+    
+    # Initialize camera if needed
+    with lock:
+        if camera is None or not camera.isOpened():
+            camera = init_camera()
+    
+    tutorial_mode_active = True
+    return jsonify({"status": "success"})
+
 def generate_tutorial_frames():
     """Generate frames with hand detection for tutorial page"""
     global camera, last_detected_letter, tutorial_mode_active

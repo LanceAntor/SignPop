@@ -18,6 +18,23 @@ $(document).ready(function() {
     // Game variables
     let gameRunning = false;
     let statusCheckInterval;
+    let soundEnabled = true;
+    let lastScore = 0; // Track last score to detect increases
+
+    // Sound effect functions
+    function playPopSound() {
+        if (!soundEnabled) return;
+        const popSound = document.getElementById('popSound');
+        popSound.currentTime = 0; // Reset sound to beginning
+        popSound.play();
+    }
+
+    function playGameOverSound() {
+        if (!soundEnabled) return;
+        const gameOverSound = document.getElementById('gameOverSound');
+        gameOverSound.currentTime = 0;
+        gameOverSound.play();
+    }
 
     // Start game when clicking the play button
     $('#start-button').click(function() {
@@ -49,6 +66,9 @@ $(document).ready(function() {
 
     // Start game function
     function startGame() {
+        // Reset lastScore when starting a new game
+        lastScore = 0;
+        
         // Call the start_game endpoint
         $.ajax({
             url: '/start_game',
@@ -83,6 +103,9 @@ $(document).ready(function() {
                     
                     // Show game over modal if game ended by losing (not manual stop)
                     if (!isManual) {
+                        // Play game over sound
+                        playGameOverSound();
+                        
                         // Update final score in modal
                         $('#finalScore').text(response.score);
                         
@@ -101,6 +124,12 @@ $(document).ready(function() {
         $.ajax({
             url: '/get_status',
             success: function(status) {
+                // Check if score increased (letter was popped)
+                if (status.score > lastScore) {
+                    playPopSound();
+                    lastScore = status.score;
+                }
+                
                 // Update score
                 $('#score-display').text(status.score);
                 
@@ -125,4 +154,18 @@ $(document).ready(function() {
     
     // Initialize with yellow hearts
     updateHearts(3);
+    
+    // Add sound toggle functionality (if you want to add a mute button)
+    // Uncomment this section if you add a sound toggle button to your HTML
+    /*
+    $('#soundToggle').click(function() {
+        soundEnabled = !soundEnabled;
+        
+        if (soundEnabled) {
+            $(this).html('<i class="fas fa-volume-up"></i>');
+        } else {
+            $(this).html('<i class="fas fa-volume-mute"></i>');
+        }
+    });
+    */
 });

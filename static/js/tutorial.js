@@ -40,35 +40,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Camera toggle functionality
+    // Camera toggle functionality - completely stop/start camera
     cameraToggle.addEventListener('click', () => {
         cameraActive = !cameraActive;
         
         if (cameraActive) {
-            // Turn camera on
-            cameraFeed.style.display = 'block';
-            cameraPlaceholder.style.display = 'none';
-            cameraToggle.innerHTML = '<i class="fas fa-video"></i>';
-            cameraToggle.classList.remove('off');
-            
-            // Reactivate tutorial mode
-            fetch('/activate_tutorial')
+            // Turn camera on - make a request to start the camera
+            fetch('/start_camera')
                 .then(response => response.json())
-                .catch(error => console.error('Error activating tutorial mode:', error));
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Show camera feed with a new timestamp to force reload
+                        cameraFeed.src = `/video_feed_tutorial?t=${new Date().getTime()}`;
+                        cameraFeed.style.display = 'block';
+                        cameraPlaceholder.style.display = 'none';
+                        cameraToggle.innerHTML = '<i class="fas fa-video"></i>';
+                        cameraToggle.classList.remove('off');
+                        
+                        // Reactivate tutorial mode
+                        fetch('/activate_tutorial')
+                            .then(response => response.json())
+                            .catch(error => console.error('Error activating tutorial mode:', error));
+                        
+                        // Reset detection status
+                        detectedLetter.textContent = 'Ready to detect';
+                    }
+                })
+                .catch(error => console.error('Error starting camera:', error));
         } else {
-            // Turn camera off
-            cameraFeed.style.display = 'none';
-            cameraPlaceholder.style.display = 'flex';
-            cameraToggle.innerHTML = '<i class="fas fa-video-slash"></i>';
-            cameraToggle.classList.add('off');
-            
-            // Stop getting detected letters while camera is off
-            detectedLetter.textContent = 'Camera off';
-            
-            // Deactivate tutorial mode
-            fetch('/deactivate_tutorial')
+            // Turn camera off - make a request to release the camera
+            fetch('/stop_camera')
                 .then(response => response.json())
-                .catch(error => console.error('Error deactivating tutorial mode:', error));
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Hide camera feed and show placeholder
+                        cameraFeed.style.display = 'none';
+                        cameraPlaceholder.style.display = 'flex';
+                        cameraToggle.innerHTML = '<i class="fas fa-video-slash"></i>';
+                        cameraToggle.classList.add('off');
+                        
+                        // Stop getting detected letters while camera is off
+                        detectedLetter.textContent = 'Camera off';
+                        
+                        // Deactivate tutorial mode
+                        fetch('/deactivate_tutorial')
+                            .then(response => response.json())
+                            .catch(error => console.error('Error deactivating tutorial mode:', error));
+                    }
+                })
+                .catch(error => console.error('Error stopping camera:', error));
         }
     });
     
