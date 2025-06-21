@@ -66,5 +66,14 @@ In the game mode, players:
 - ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 - ![Font Awesome](https://img.shields.io/badge/Font%20Awesome-528DD7?style=for-the-badge&logo=fontawesome&logoColor=white)
 
+# Acknowledgement
 
-
+- **[Flask](https://flask.palletsprojects.com/)**: The lightweight web framework that powers the project.
+- **[OpenCV](https://opencv.org/)**: For real-time computer vision and camera handling.
+- **[TensorFlow](https://www.tensorflow.org/)**: For the machine learning model that powers sign detection.
+- **[cvzone](https://github.com/cvzone/cvzone)**: For simplified computer vision and hand tracking utilities.
+- **[NumPy](https://numpy.org/)**: For numerical operations and array handling in image processing.
+- **[Font Awesome](https://fontawesome.com/)**: For offering free and high-quality icons.
+- **[jQuery](https://jquery.com/)**: For simplifying DOM manipulation and AJAX interactions.
+- **[ASL University](https://www.lifeprint.com/)**: For reference materials on American Sign Language.
+- **[Kaggle ASL Dataset](https://www.kaggle.com/grassknoted/asl-alphabet)**: For providing training data for the sign recognition model.
