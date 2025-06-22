@@ -20,6 +20,7 @@ falling_letters = []
 camera = None
 lock = threading.Lock()  # For thread safety
 last_prediction = {"label": None, "confidence": 0}
+letters_hit_bottom = False  # Add this line
 
 # Tutorial mode variables
 last_detected_letter = None
@@ -29,11 +30,12 @@ tutorial_mode_active = False
 DARK_BLUE = (51, 0, 13)  # BGR format for OpenCV (equivalent to #0d0033)
 
 class FallingLetter:
-    def __init__(self, letter, x, y):
+    def __init__(self, letter, x, y, base_speed=None):
         self.letter = letter
-        self.x = x
-        self.y = y
-        self.speed = random.randint(2, 5)
+        self.x = int(x)  # Ensure x is an integer
+        self.y = int(y)  # Ensure y is an integer
+        # Allow custom base speed or use random
+        self.speed = base_speed if base_speed is not None else random.randint(2, 5)
         self.active = True
 
 def init_camera():
@@ -72,7 +74,7 @@ def generate_frames():
         falling_letters = []
     
     last_letter_time = time.time()
-    letter_interval = 3.0  # Time between new letters
+    base_letter_interval = 3.0  # Base time between new letters
     
     while True:
         # Reinitialize camera if game is active but camera is None or closed
@@ -99,36 +101,67 @@ def generate_frames():
                 predicted_label, confidence, _, _ = detector.detect_hand_sign(frame)
                 last_prediction = {"label": predicted_label, "confidence": confidence}
                 
-                # Add new falling letter at random intervals
+                # Calculate difficulty modifiers based on score
+                speed_multiplier = 1 + (score // 50) * 0.5  # Increase speed by 0.5x every 50 points
+                frequency_modifier = max(0.5, 1.0 - (score // 100) * 0.2)  # Decrease interval by 20% every 100 points
+                multi_letter_chance = min(80, score // 30)  # Chance to spawn multiple letters (up to 80%)
+                
+                # Calculate actual letter interval based on score
+                letter_interval = base_letter_interval * frequency_modifier
+                
+                # Add new falling letter at dynamic intervals
                 current_time = time.time()
                 if current_time - last_letter_time > letter_interval:
+                    # Always add at least one letter
                     letter = random.choice(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
                                           "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", 
                                           "W", "X", "Y", "Z"])
                     x_pos = random.randint(80, 550)
+                    
+                    # Start letters at the top of the game area, just slightly below the border
+                    y_pos = 50  # Use a smaller value to appear at the top edge of the border
+                    
                     with lock:
-                        falling_letters.append(FallingLetter(letter, x_pos, 150))
+                        # Calculate base speed with some randomness but adjust for difficulty
+                        base_speed = random.randint(2, 5) * speed_multiplier
+                        falling_letters.append(FallingLetter(letter, x_pos, y_pos, base_speed))
+                    
+                    # Chance to add additional letters as score increases
+                    if random.randint(1, 100) <= multi_letter_chance:
+                        num_extra = min(3, score // 150 + 1)  # Add up to 3 extra letters based on score
+                        for _ in range(num_extra):
+                            extra_letter = random.choice(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
+                                                       "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", 
+                                                       "W", "X", "Y", "Z"])
+                            extra_x = random.randint(80, 550)
+                            with lock:
+                                falling_letters.append(FallingLetter(extra_letter, extra_x, y_pos, base_speed))
+                    
                     last_letter_time = current_time
-                    letter_interval = random.uniform(2.0, 5.0)  # Random interval
+                    # Reset the timer with some randomness
+                    base_letter_interval = random.uniform(2.0, 4.0)
                 
                 # Process letters
                 letters_to_remove = []
+                letters_hit_bottom = False  # Flag to indicate if any letters hit bottom in this frame
+
                 with lock:
                     for i, letter_obj in enumerate(falling_letters):
-                        # Update position
+                        # Update position - letters fall faster as score increases
                         letter_obj.y += letter_obj.speed
                         
                         # Check if letter hit bottom
                         if letter_obj.y > 450:
                             letters_to_remove.append(i)
                             lives -= 1
+                            letters_hit_bottom = True  # Set flag when letter hits bottom
                             if lives <= 0:
                                 game_active = False
                         
                         # Check if letter was detected
                         if last_prediction["label"] == letter_obj.letter and last_prediction["confidence"] > 75 and letter_obj.active:
                             # Visual effect for popped letter
-                            cv2.circle(canvas, (letter_obj.x, letter_obj.y), 45, (0, 255, 0), 3)
+                            cv2.circle(canvas, (int(letter_obj.x), int(letter_obj.y)), 45, (0, 255, 0), 3)
                             letters_to_remove.append(i)
                             score += 10
                             # Reset the prediction after it's used
@@ -142,11 +175,17 @@ def generate_frames():
         # Draw falling letters regardless of game state
         with lock:
             for letter_obj in falling_letters:
-                # Draw letter circle with consistent color
-                cv2.circle(canvas, (letter_obj.x, letter_obj.y), 40, (180, 0, 180), -1)
-                cv2.putText(canvas, letter_obj.letter, 
-                          (letter_obj.x - 12, letter_obj.y + 15), 
-                          cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 2)
+                try:
+                    # Make sure coordinates are valid integers
+                    x = int(letter_obj.x)
+                    y = int(letter_obj.y)
+                    # Draw letter circle with consistent color
+                    cv2.circle(canvas, (x, y), 40, (180, 0, 180), -1)
+                    cv2.putText(canvas, letter_obj.letter, 
+                              (x - 12, y + 15), 
+                              cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 255, 255), 2)
+                except Exception as e:
+                    print(f"Error drawing letter: {e} - Coordinates: {letter_obj.x}, {letter_obj.y}")
         
         # Convert canvas to JPEG
         ret, buffer = cv2.imencode('.jpg', canvas)
@@ -239,7 +278,8 @@ def start_game():
     # No initial letters - start with empty list
     with lock:
         falling_letters = []
-        
+    
+    print("Game started - active:", game_active, "started:", game_started)
     return jsonify({'status': 'success'})
 
 # Add this function to release the camera
@@ -274,13 +314,17 @@ def end_game():
 
 @app.route('/get_status')
 def get_status():
-    return jsonify({
+    global letters_hit_bottom
+    status = {
         'game_active': game_active,
         'game_started': game_started,
         'score': score,
         'lives': lives,
-        'letters_count': len(falling_letters)
-    })
+        'letters_count': len(falling_letters),
+        'letter_hit_bottom': letters_hit_bottom
+    }
+    letters_hit_bottom = False  # Reset the flag after sending
+    return jsonify(status)
 
 # Add these global variables and routes for the tutorial page
 @app.route('/video_feed_tutorial')

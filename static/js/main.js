@@ -20,6 +20,7 @@ $(document).ready(function() {
     let statusCheckInterval;
     let soundEnabled = true;
     let lastScore = 0; // Track last score to detect increases
+    let lastLives = 3; // Track lives to detect when a letter hits bottom
 
     // Sound effect functions
     function playPopSound() {
@@ -28,12 +29,25 @@ $(document).ready(function() {
         popSound.currentTime = 0; // Reset sound to beginning
         popSound.play();
     }
-
+    function playClickSound(){
+        if (!soundEnabled) return;
+        const clickSound = document.getElementById('clickSound');
+        clickSound.currentTime = 0; 
+        clickSound.play();
+    }
     function playGameOverSound() {
         if (!soundEnabled) return;
         const gameOverSound = document.getElementById('gameOverSound');
         gameOverSound.currentTime = 0;
         gameOverSound.play();
+    }
+
+    // Additional sound effect function for missed letters
+    function playMissedSound() {
+        if (!soundEnabled) return;
+        const missedSound = document.getElementById('missedSound');
+        missedSound.currentTime = 0; // Reset sound to beginning
+        missedSound.play();
     }
 
     // Start game when clicking the play button
@@ -68,7 +82,8 @@ $(document).ready(function() {
     function startGame() {
         // Reset lastScore when starting a new game
         lastScore = 0;
-        
+        lastLives = 3; // Reset lives tracker
+        playClickSound(); // Play click sound on start
         // Call the start_game endpoint
         $.ajax({
             url: '/start_game',
@@ -129,6 +144,12 @@ $(document).ready(function() {
                     playPopSound();
                     lastScore = status.score;
                 }
+                
+                // Check if lives decreased (letter hit bottom)
+                if (status.lives < lastLives) {
+                    playMissedSound();
+                }
+                lastLives = status.lives;
                 
                 // Update score
                 $('#score-display').text(status.score);

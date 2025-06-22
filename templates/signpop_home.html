@@ -14,10 +14,14 @@
         <hr>    
         
         <div class="button-container">
-            <a href="{{ url_for('index') }}" class="button start-button">PRESS START</a>
+            <a id="start-btn" href="{{ url_for('index') }}" class="button start-button">PRESS START</a>
             
-            <a href="{{ url_for('tutorial') }}" class="button tutorial-button">TUTORIAL</a>
+            <a id="tutorial-btn" href="{{ url_for('tutorial') }}" class="button tutorial-button">TUTORIAL</a>
         </div>
     </div>
+
+    <audio id="clickSound" src="{{ url_for('static', filename='sounds/click.mp3') }}" preload="auto"></audio>
+
+    <script src="{{ url_for('static', filename='js/signpop.js') }}"></script>
 </body>
 </html>
