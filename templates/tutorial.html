@@ -46,25 +46,28 @@
         </div> 
         
         <div class="camera-display">
-            <!-- Add camera toggle button -->
+            <!-- Camera toggle button - initially shows camera off icon -->
             <button id="cameraToggle" class="camera-toggle">
-                <i class="fas fa-video"></i>
+                <i class="fas fa-video-slash"></i>
             </button>
             
-            <img id="cameraFeed" src="{{ url_for('video_feed_tutorial') }}" alt="Camera Feed with Hand Detection">
+            <!-- Camera feed - initially hidden -->
+            <img id="cameraFeed" src="{{ url_for('video_feed_tutorial') }}" alt="Camera Feed with Hand Detection" style="display: none;">
             
-            <!-- Add a placeholder for when camera is off -->
-            <div id="cameraPlaceholder" class="camera-placeholder" style="display: none;">
+            <!-- Placeholder - initially visible -->
+            <div id="cameraPlaceholder" class="camera-placeholder">
                 <i class="fas fa-video-slash"></i>
                 <p>Camera is off</p>
             </div>
             
             <div class="detection-overlay">
-                <p id="detectedLetter">Ready to detect</p>
+                <p id="detectedLetter">Camera off - No detection</p>
             </div>
         </div>
     </div>
 
+    <audio id="clickSound" src="{{ url_for('static', filename='sounds/click.mp3') }}" preload="auto"></audio>
+    
     <script src="{{ url_for('static', filename='js/tutorial.js') }}"></script>
 </body>
 </html>

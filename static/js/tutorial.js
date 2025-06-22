@@ -6,12 +6,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const cameraPlaceholder = document.getElementById('cameraPlaceholder');
     const cameraToggle = document.getElementById('cameraToggle');
     let lastDetectedLetter = '';
-    let cameraActive = true;
+    let cameraActive = false; // Start with camera inactive
+    const clickSound = document.getElementById('clickSound');
     
-    // Activate tutorial mode when page loads
-    fetch('/activate_tutorial')
+    // Function to play click sound
+    function playClickSound() {
+        if (clickSound) {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(err => console.error("Error playing sound:", err));
+        }
+    }
+    
+    // Initialize with camera off
+    cameraFeed.style.display = 'none';
+    cameraPlaceholder.style.display = 'flex';
+    cameraToggle.innerHTML = '<i class="fas fa-video-slash"></i>';
+    cameraToggle.classList.add('off');
+    detectedLetter.textContent = 'Camera off';
+    
+    // Deactivate tutorial mode when page loads (camera starts off)
+    fetch('/deactivate_tutorial')
         .then(response => response.json())
-        .catch(error => console.error('Error activating tutorial mode:', error));
+        .catch(error => console.error('Error deactivating tutorial mode:', error));
+    
+    fetch('/stop_camera')
+        .then(response => response.json())
+        .catch(error => console.error('Error stopping camera initially:', error));
     
     // Set the first button (A) as active by default
     alphabetButtons[0].classList.add('active');
@@ -19,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Add click event listeners to all alphabet buttons
     alphabetButtons.forEach(button => {
         button.addEventListener('click', () => {
+            // Play click sound
+            playClickSound();
+            
             // Remove active class from all buttons
             alphabetButtons.forEach(btn => btn.classList.remove('active'));
             
@@ -42,6 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Camera toggle functionality - completely stop/start camera
     cameraToggle.addEventListener('click', () => {
+        // Play click sound
+        playClickSound();
+        
         cameraActive = !cameraActive;
         
         if (cameraActive) {
