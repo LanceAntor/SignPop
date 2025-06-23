@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Check if the file extension is jpg or png based on your file structure
             let fileExtension = 'jpg';
-            if (letter === 'F' || letter === 'H' || letter === 'P' || letter === 'Z') {
+            if (letter === 'D' || letter === 'F' || letter === 'H' || letter === 'P' || letter === 'Z') {
                 fileExtension = 'png';
             }
             
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         // Update the reference image to match the detected letter
                         let fileExtension = 'jpg';
-                        if (data.letter === 'F' || data.letter === 'H' || data.letter === 'P' || data.letter === 'Z') {
+                        if (data.letter === 'D' || data.letter === 'F' || data.letter === 'H' || data.letter === 'P' || data.letter === 'Z') {
                             fileExtension = 'png';
                         }
                         signImage.src = `/static/ASL_Alphabet/${data.letter}.${fileExtension}`;
