@@ -28,7 +28,7 @@ SignLanguageAlphabet is an engaging and interactive learning app designed to hel
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/SignLanguageAlphabet.git
+git clone https://github.com/LanceAntor/SignPop.git
 cd SignLanguageAlphabet
 
 # Create a virtual environment
