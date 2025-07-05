@@ -1,6 +1,6 @@
 # SignPop
 
-SignLanguageAlphabet is an engaging and interactive learning app designed to help users master the American Sign Language (ASL) alphabet. Whether you're a beginner or looking to reinforce your skills, this app offers a fun and educational experience through step-by-step tutorials, visual demonstrations, and an exciting game mode to test your knowledge.
+SignPop is an engaging and interactive learning app designed to help users master the American Sign Language (ASL) alphabet. Whether you're a beginner or looking to reinforce your skills, this app offers a fun and educational experience through step-by-step tutorials, visual demonstrations, and an exciting game mode to test your knowledge.
 
 ## Visual Demo
 
