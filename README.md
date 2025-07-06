@@ -29,16 +29,19 @@ SignPop is an engaging and interactive learning app designed to help users maste
 ```bash
 # Clone the repository
 git clone https://github.com/LanceAntor/SignPop.git
-cd SignLanguageAlphabet
+cd SignPop
 
-# Create a virtual environment
+# Create a virtual environment (optional for local development)
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Run the application
+# Run the Streamlit application
+streamlit run streamlit_app.py
+
+# Alternative: Run the original Flask version (if needed)
 python app.py
 
 ```
@@ -77,3 +80,37 @@ In the game mode, players:
 - **[jQuery](https://jquery.com/)**: For simplifying DOM manipulation and AJAX interactions.
 - **[ASL University](https://www.lifeprint.com/)**: For reference materials on American Sign Language.
 - **[Kaggle ASL Dataset](https://www.kaggle.com/grassknoted/asl-alphabet)**: For providing training data for the sign recognition model.
+
+## Streamlit Cloud Deployment
+
+This project is now optimized for Streamlit Cloud deployment:
+
+### Quick Deploy to Streamlit Cloud:
+1. Fork this repository to your GitHub account
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Click "New app"
+4. Select your forked repository
+5. Set main file path to: `streamlit_app.py`
+6. Click "Deploy"
+
+### Local Streamlit Development:
+```bash
+# Install Streamlit
+pip install streamlit
+
+# Run the Streamlit app
+streamlit run streamlit_app.py
+```
+
+### Key Features in Streamlit Version:
+- 🏠 **Home Page**: Welcome screen with game overview
+- 🎯 **Game Mode**: Interactive SignPop game with falling letters
+- 📚 **Tutorial**: ASL alphabet learning with reference images
+- 📊 **Real-time Stats**: Score tracking and game statistics
+- 🎮 **Interactive UI**: Modern Streamlit interface
+
+### Requirements Fixed for Cloud Deployment:
+- Removed `tensorflow-intel` (Intel-specific package)
+- Updated to `opencv-python-headless` for cloud compatibility
+- Streamlined dependencies for faster deployment
+- Added Streamlit configuration
