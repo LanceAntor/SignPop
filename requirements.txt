@@ -22,8 +22,6 @@ grpcio==1.73.0
 h5py==3.14.0
 idna==3.10
 itsdangerous==2.2.0
-jax==0.4.30
-jaxlib==0.4.30
 Jinja2==3.1.6
 keras==2.12.0
 kiwisolver==1.4.8
@@ -33,10 +31,10 @@ markdown-it-py==3.0.0
 MarkupSafe==3.0.2
 matplotlib==3.10.3
 mdurl==0.1.2
-mediapipe==0.10.21
+mediapipe==0.10.9
 ml_dtypes==0.5.1
 namex==0.1.0
-numpy==1.23.5
+numpy<1.24,>=1.23.5
 oauthlib==3.2.2
 opencv-contrib-python==4.11.0.86
 opencv-python==4.11.0.86
@@ -44,7 +42,7 @@ opt_einsum==3.4.0
 optree==0.16.0
 packaging==25.0
 pillow==11.2.1
-protobuf==4.25.8
+protobuf>=3.11,<4
 pyasn1==0.6.1
 pyasn1_modules==0.4.2
 pycparser==2.22
